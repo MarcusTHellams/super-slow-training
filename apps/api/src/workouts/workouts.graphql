@@ -1,0 +1,45 @@
+type Workout {
+  id: Int!
+  title: String!
+  reps: Int!
+  sets: Int!
+  move: Int!
+  hold: Int!
+  return: Int!
+  intervalBetweenReps: Int!
+  intervalBetweenSets: Int!
+}
+
+input CreateWorkoutInput {
+  title: String!
+  reps: Int
+  sets: Int
+  move: Int
+  hold: Int
+  return: Int
+  intervalBetweenReps: Int
+  intervalBetweenSets: Int
+}
+
+input UpdateWorkoutInput {
+  id: Int!
+  title: String
+  reps: Int
+  sets: Int
+  move: Int
+  hold: Int
+  return: Int
+  intervalBetweenReps: Int
+  intervalBetweenSets: Int
+}
+
+type Query {
+  workouts: [Workout]!
+  workout(id: Int!): Workout
+}
+
+type Mutation {
+  createWorkout(createWorkoutInput: CreateWorkoutInput!): Workout!
+  updateWorkout(updateWorkoutInput: UpdateWorkoutInput!): Workout!
+  removeWorkout(id: Int!): Workout
+}
