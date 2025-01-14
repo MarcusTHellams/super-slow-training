@@ -31,3 +31,19 @@ export const CREATE_WORKOUT = gql`
     }
   }
 `;
+
+export const REMOVE_WORKOUT = gql`
+  mutation REMOVE_WORKOUT($id: Int!) {
+    removeWorkout(id: $id) {
+      id
+      title
+      reps
+      sets
+      move
+      hold
+      return
+      intervalBetweenReps
+      intervalBetweenSets
+    }
+  }
+`;

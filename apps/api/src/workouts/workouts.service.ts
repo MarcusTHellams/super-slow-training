@@ -39,7 +39,6 @@ export class WorkoutsService {
     return db
       .delete(workoutTable)
       .where(eq(workoutTable.id, id))
-      .limit(1)
       .returning()
       .then((res) => res[0]);
   }

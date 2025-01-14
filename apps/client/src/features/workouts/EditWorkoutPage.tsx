@@ -1,18 +1,21 @@
-import { Container } from '@/components';
+import { Container, Loading } from '@/components';
 import { WorkoutForm, type WorkoutSchema } from '@/features/workouts/components/WorkoutForm';
-import { graphqlClient } from '@/lib';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { ComponentProps } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { UPDATE_WORKOUT } from '@/features/workouts/graphql/mutations.ts';
 import { GET_WORKOUT } from '@/features/workouts/graphql/queries.ts';
 import { Workout } from '@/features/workouts/types.ts';
-import { UPDATE_WORKOUT } from '@/features/workouts/graphql/mutations.ts';
+import { graphqlClient } from '@/lib';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { ComponentProps, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 export const EditWorkoutPage = () => {
+  const [isEditingWorkout, setIsEditingWorkout] = useState(false);
+
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { id } = useParams();
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['workout', id],
     async queryFn() {
       return graphqlClient
@@ -36,20 +39,26 @@ export const EditWorkoutPage = () => {
     },
     onSuccess() {
       queryClient.invalidateQueries({ queryKey: ['workouts'] });
+      toast.success('Successfully Edited a Workout');
       navigate('/');
+    },
+    onSettled() {
+      setIsEditingWorkout(false);
     },
   });
 
   const submitHandler: ComponentProps<typeof WorkoutForm>['onSubmit'] = (workout) => {
-    console.log('workout: ', workout);
-    // mutate(workout);
+    setIsEditingWorkout(true);
+    mutate(workout);
   };
   return (
     <>
-      <Container containerClass={false} className="w-11/12 md:w-3/12 mx-auto">
-        <h1>Edit Workout</h1>
-        {data && <WorkoutForm workout={data} onSubmit={submitHandler} />}
-      </Container>
+      <Loading isLoading={isEditingWorkout || isLoading}>
+        <Container containerClass={false} className="w-11/12 md:w-3/12 mx-auto">
+          <h1>Edit Workout</h1>
+          {data && <WorkoutForm workout={data} onSubmit={submitHandler} />}
+        </Container>
+      </Loading>
     </>
   );
 };

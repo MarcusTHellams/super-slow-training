@@ -6,7 +6,7 @@ export const workoutTable = sqliteTable('Workout', {
   reps: int().notNull().default(1),
   sets: int().notNull().default(1),
   move: int().notNull().default(1),
-  hold: int().notNull().default(1),
+  hold: int().notNull().default(0),
   return: int().notNull().default(1),
   intervalBetweenReps: int().notNull().default(0),
   intervalBetweenSets: int().notNull().default(0),

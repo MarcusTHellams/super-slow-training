@@ -17,19 +17,34 @@ import { z } from 'zod';
 
 const workoutSchema = z.object({
   title: z.string({ required_error: 'Title is Required' }).min(1, 'Title is Required'),
-  reps: z.coerce.number().positive('Reps must be a Positive Digit').optional(),
-  sets: z.coerce.number().positive('Sets must be a Positive Digit').optional(),
-  move: z.coerce.number().positive('Move must be a Positive Digit').optional(),
-  hold: z.coerce.number().positive('Hold must be a Positive Digit').optional(),
-  return: z.coerce.number().positive('Return must be a Positive Digit').optional(),
-  intervalBetweenReps: z.coerce
-    .number()
-    .positive('Interval Between Reps must be a Positive Digit')
-    .optional(),
-  intervalBetweenSets: z.coerce
-    .number()
-    .positive('Interval Between Sets must be a Positive Digit')
-    .optional(),
+  reps: z
+    .union([z.literal(''), z.coerce.number().positive('Reps must be a Positive Digit')])
+    .optional()
+    .transform((val) => (isNaN(val as number) ? undefined : Number(val))),
+  sets: z
+    .union([z.literal(''), z.coerce.number().positive('Sets must be a Positive Digit')])
+    .optional() .transform((val) => (isNaN(val as number) ? undefined : Number(val))),
+  move: z
+    .union([z.literal(''), z.coerce.number().positive('Move must be a Positive Digit')])
+    .optional().transform((val) => (isNaN(val as number) ? undefined : Number(val))),
+  hold: z
+    .union([z.literal(''), z.coerce.number().positive('Hold must be a Positive Digit')])
+    .optional().transform((val) => (isNaN(val as number) ? undefined : Number(val))),
+  return: z
+    .union([z.literal(''), z.coerce.number().positive('Return must be a Positive Digit')])
+    .optional().transform((val) => (isNaN(val as number) ? undefined : Number(val))),
+  intervalBetweenReps: z
+    .union([
+      z.literal(''),
+      z.coerce.number().positive('Interval Between Reps must be a Positive Digit'),
+    ])
+    .optional().transform((val) => (isNaN(val as number) ? undefined : Number(val))),
+  intervalBetweenSets: z
+    .union([
+      z.literal(''),
+      z.coerce.number().positive('Interval Between Sets must be a Positive Digit'),
+    ])
+    .optional().transform((val) => (isNaN(val as number) ? undefined : Number(val))),
 });
 
 export type WorkoutSchema = z.infer<typeof workoutSchema>;
